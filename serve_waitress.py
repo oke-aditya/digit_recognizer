@@ -1,4 +1,4 @@
 from waitress import serve
-import app
+import web_app
 
-serve(app.app, port=8000, threads=6)
+serve(web_app.app, port=8000, threads=6)
