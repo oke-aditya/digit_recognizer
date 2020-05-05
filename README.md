@@ -1,6 +1,10 @@
 # Digit Recognizer
 Simple Flask App to recongize Handwrtten Digits.
-Note while deploying and using I have used Heroku with Gunicorn server. It is wsgi and production ready.
+
+Note while deploying and using I have used Heroku with Gunicorn server.
+
+The model is a simple CNN architecture. It is converted to ONNX format for easy inference using opencv.
+The model is in ONNX format. You can use tensorflow as well. Just load it properly using tensorflow.
 
 
 # Running locally.
@@ -23,7 +27,7 @@ While deploying locally please use waitress by running
 
 ``` python ./server_waitress.py ```
 
-The model is in ONNX format. You can use tensorflow as well. Just load it properly using tensorflow.
+
 
 
 
