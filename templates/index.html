@@ -34,7 +34,7 @@
 
 <!-- Main Javascript code for making the canvas and mouse handling -->
 <script type="text/javascript">
-    var canvas, ctx, flag = False,
+    var canvas, ctx, flag = false,
     prevX = 0,
     currX = 0,
     prevY = 0,
@@ -45,7 +45,85 @@
         ctx = canvas.getContext("2d");
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 25;
+        ctx.lineCap = "round";
+        w = canvas.width;
+        h = canvas.height;
         
+        canvas.addEventListener("mousemove", function(e)
+        {
+            mouseEventHandler("move", e)
+        }, false);
+
+        canvas.addEventListener("mousedown", function(e){
+            mouseEventHandler("down", e);
+        }, false);
+
+        canvas.addEventListener("mouseup", function (e) {
+            mouseEventHandler('up', e)
+        }, false);
+        canvas.addEventListener("mouseout", function (e) {
+            mouseEventHandler('out', e)
+        }, false);    
+    }
+
+    function draw(){
+        ctx.beginPath();
+        ctx.moveTo(prevX, prevY);
+        ctx.lineTo(currX, currY);
+        ctx.stroke();
+        ctx.closePath();
+    }
+
+    function erase(){
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, w, h);
+    }
+// Upload the digit from the canvas
+    function upload(){
+
+        // Convert to jpeg image
+        var dataURL = canvas.toDataURL("image/jpeg", 0.8);
+        // Ajax call to the server
+        $.ajax({
+            type:"POST",
+            url:"/upload",
+            data:{"data":dataURL},
+            success: function(data){
+                console.log(data)
+                var json = JSON.parse(data)
+                $("#output").html("<string> Recognized Digit </strong> :" + json.class + "<br> <strong> Confidence </strong>" + json.confidence)
+
+            },
+            error: function (data) 
+            {
+                console.log("Upload failed")
+            }
+        }).done(function(){console.log("Sent");});
+    }
+    function mouseEventHandler(res, e) 
+    {
+        if (res == 'down') {
+            prevX = currX;
+            prevY = currY;
+            currX = e.clientX - canvas.offsetLeft;
+            currY = e.clientY - canvas.offsetTop;
+    
+            flag = true;
+        }
+        if (res == 'up' || res == "out") {
+            flag = false;
+        }
+        if (res == 'move') {
+            if (flag) {
+                prevX = currX;
+                prevY = currY;
+                currX = e.clientX - canvas.offsetLeft;
+                currY = e.clientY - canvas.offsetTop;
+                draw();
+            }
+        }
     }
 
 </script>
