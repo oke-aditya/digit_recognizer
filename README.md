@@ -25,7 +25,7 @@ While developing use the flask server
 
 While deploying locally please use waitress by running
 
-``` python ./server_waitress.py ```
+``` python ./serve_waitress.py ```
 
 
 
